@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lain Desktop</title>
+    <style>
+        /* 全体的なデザイン */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;  /* より深みのあるダークテーマ */
+            color: #e1e1e1;  /* 明るいテキスト */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #ff6347;  /* Lainカラー */
+            font-size: 40px;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 10px rgba(255, 99, 71, 0.8);
+            letter-spacing: 2px;
+        }
+
+        .container {
+            background-color: #2a2a2a;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            max-width: 650px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* インプットボックス */
+        input[type="text"] {
+            width: 100%;
+            padding: 18px;
+            margin-bottom: 25px;
+            background-color: #333;
+            border: 2px solid #ff6347;
+            border-radius: 10px;
+            color: #e1e1e1;
+            font-size: 18px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #ff4500;  /* フォーカス時の強調色 */
+        }
+
+        /* ボタン */
+        button {
+            padding: 16px 30px;
+            background-color: #ff6347;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #e53e3e;
+            transform: scale(1.05);  /* ホバー時の拡大効果 */
+        }
+
+        /* ラジオボタン */
+        .search-options {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .search-options label {
+            margin: 8px 0;
+            font-size: 18px;
+            color: #e1e1e1;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .search-options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .search-options label:hover {
+            color: #ff6347;  /* ホバー時にラベルが強調される */
+        }
+
+        /* アニメーション */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* フッター */
+        .footer {
+            position: fixed;
+            bottom: 15px;
+            width: 100%;
+            text-align: center;
+            color: #808080;
+            font-size: 14px;
+        }
+
+        /* モバイルレスポンシブ対応 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+                width: 90%;
+                max-width: 500px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            button {
+                padding: 14px 25px;
+            }
+
+            .search-options label {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lain Desktop</h1>
+        
+        <input type="text" id="search-query" placeholder="検索ワードを入力..." />
+        
+        <button onclick="performSearch()">検索</button>
+        
+        <div class="search-options">
+            <label><input type="radio" name="search-type" value="anime" checked> アニメ検索</label>
+            <label><input type="radio" name="search-type" value="doujin"> 同人ソフトウェア検索</label>
+            <label><input type="radio" name="search-type" value="nico"> ニコニコ動画検索</label>
+            <label><input type="radio" name="search-type" value="fanart"> 二次創作検索</label>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Powered by Lain Desktop</p>
+    </div>
+
+    <script>
+        // 検索処理
+        function performSearch() {
+            const query = document.getElementById('search-query').value.trim();
+            const searchType = document.querySelector('input[name="search-type"]:checked').value;
+
+            if (query === "") {
+                alert("検索ワードを入力してください");
+                return;
+            }
+
+            let url = "";
+
+            switch (searchType) {
+                case "anime":
+                    url = "https://www.google.com/search?q=" + encodeURIComponent(query + " アニメ");
+                    break;
+                case "doujin":
+                    url = "https://www.google.com/search?q=" + encodeURIComponent(query + " 同人 ソフトウェア");
+                    break;
+                case "nico":
+                    url = "https://www.nicovideo.jp/search/" + encodeURIComponent(query);
+                    break;
+                case "fanart":
+                    url = "https://www.pixiv.net/search.php?s_mode=s_tag&word=" + encodeURIComponent(query + " 二次創作");
+                    break;
+                default:
+                    alert("選択された検索タイプは無効です");
+                    return;
+            }
+
+            // 新しいタブで検索結果を表示
+            window.open(url, "_blank");
+        }
+    </script>
+</body>
+</html>
