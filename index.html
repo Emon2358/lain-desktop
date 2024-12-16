@@ -152,15 +152,6 @@
             font-size: 16px;
         }
 
-        .footer {
-            position: fixed;
-            bottom: 15px;
-            width: 100%;
-            text-align: center;
-            color: #808080;
-            font-size: 14px;
-        }
-
         /* モバイルレスポンシブ対応 */
         @media (max-width: 768px) {
             .container {
@@ -215,7 +206,7 @@
 
             const resultContainer = document.getElementById('result-container');
             resultContainer.innerHTML = '';  // 既存の結果をクリア
-            resultContainer.style.display = 'flex';
+            resultContainer.style.display = 'flex'; // 検索結果を表示
 
             let results = [];
             switch (searchType) {
@@ -245,7 +236,7 @@
                     break;
             }
 
-            // 検索結果を1つずつ表示
+            // 検索結果を1つずつページ内に表示
             results.forEach((result, index) => {
                 const card = document.createElement('div');
                 card.classList.add('result-card');
@@ -259,3 +250,4 @@
     </script>
 </body>
 </html>
+
