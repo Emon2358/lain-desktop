@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lain Desktop</title>
     <style>
-        /* 全体的なデザイン */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background: #1a1a1a;  /* より深みのあるダークテーマ */
-            color: #e1e1e1;  /* 明るいテキスト */
+            background: #1a1a1a;
+            color: #e1e1e1;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,7 +20,7 @@
         }
 
         h1 {
-            color: #ff6347;  /* Lainカラー */
+            color: #ff6347;
             font-size: 40px;
             margin-bottom: 30px;
             text-shadow: 3px 3px 10px rgba(255, 99, 71, 0.8);
@@ -36,9 +35,9 @@
             width: 100%;
             max-width: 650px;
             animation: fadeIn 1s ease-out;
+            overflow: hidden;
         }
 
-        /* インプットボックス */
         input[type="text"] {
             width: 100%;
             padding: 18px;
@@ -53,10 +52,9 @@
         }
 
         input[type="text"]:focus {
-            border-color: #ff4500;  /* フォーカス時の強調色 */
+            border-color: #ff4500;
         }
 
-        /* ボタン */
         button {
             padding: 16px 30px;
             background-color: #ff6347;
@@ -71,10 +69,9 @@
 
         button:hover {
             background-color: #e53e3e;
-            transform: scale(1.05);  /* ホバー時の拡大効果 */
+            transform: scale(1.05);
         }
 
-        /* ラジオボタン */
         .search-options {
             margin-top: 25px;
             display: flex;
@@ -95,20 +92,66 @@
         }
 
         .search-options label:hover {
-            color: #ff6347;  /* ホバー時にラベルが強調される */
+            color: #ff6347;
         }
 
-        /* アニメーション */
         @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 15px;
+            width: 100%;
+            text-align: center;
+            color: #808080;
+            font-size: 14px;
+        }
+
+        .result-container {
+            margin-top: 30px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .result-card {
+            background-color: #333;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px;
+            width: 90%;
+            max-width: 500px;
+            text-align: left;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            transform: rotateY(90deg);
+            animation: flipIn 0.8s ease-in-out forwards;
+        }
+
+        @keyframes flipIn {
             from {
                 opacity: 0;
+                transform: rotateY(90deg);
             }
             to {
                 opacity: 1;
+                transform: rotateY(0deg);
             }
         }
 
-        /* フッター */
+        .result-title {
+            color: #ff6347;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .result-description {
+            color: #e1e1e1;
+            font-size: 16px;
+        }
+
         .footer {
             position: fixed;
             bottom: 15px;
@@ -143,9 +186,7 @@
 <body>
     <div class="container">
         <h1>Lain Desktop</h1>
-        
         <input type="text" id="search-query" placeholder="検索ワードを入力..." />
-        
         <button onclick="performSearch()">検索</button>
         
         <div class="search-options">
@@ -154,6 +195,8 @@
             <label><input type="radio" name="search-type" value="nico"> ニコニコ動画検索</label>
             <label><input type="radio" name="search-type" value="fanart"> 二次創作検索</label>
         </div>
+
+        <div class="result-container" id="result-container"></div>
     </div>
 
     <div class="footer">
@@ -161,7 +204,6 @@
     </div>
 
     <script>
-        // 検索処理
         function performSearch() {
             const query = document.getElementById('search-query').value.trim();
             const searchType = document.querySelector('input[name="search-type"]:checked').value;
@@ -171,28 +213,48 @@
                 return;
             }
 
-            let url = "";
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.innerHTML = '';  // 既存の結果をクリア
+            resultContainer.style.display = 'flex';
 
+            let results = [];
             switch (searchType) {
                 case "anime":
-                    url = "https://www.google.com/search?q=" + encodeURIComponent(query + " アニメ");
+                    results = [
+                        { title: 'アニメ検索結果 1', description: 'アニメに関する情報がここに表示されます。' },
+                        { title: 'アニメ検索結果 2', description: '次のアニメ検索結果です。' }
+                    ];
                     break;
                 case "doujin":
-                    url = "https://www.google.com/search?q=" + encodeURIComponent(query + " 同人 ソフトウェア");
+                    results = [
+                        { title: '同人ソフトウェア検索結果 1', description: '同人ソフトウェアに関する情報です。' },
+                        { title: '同人ソフトウェア検索結果 2', description: '次の同人ソフトウェア情報です。' }
+                    ];
                     break;
                 case "nico":
-                    url = "https://www.nicovideo.jp/search/" + encodeURIComponent(query);
+                    results = [
+                        { title: 'ニコニコ動画検索結果 1', description: 'ニコニコ動画に関連する情報です。' },
+                        { title: 'ニコニコ動画検索結果 2', description: '次のニコニコ動画結果です。' }
+                    ];
                     break;
                 case "fanart":
-                    url = "https://www.pixiv.net/search.php?s_mode=s_tag&word=" + encodeURIComponent(query + " 二次創作");
+                    results = [
+                        { title: '二次創作検索結果 1', description: '二次創作に関連する情報です。' },
+                        { title: '二次創作検索結果 2', description: '次の二次創作結果です。' }
+                    ];
                     break;
-                default:
-                    alert("選択された検索タイプは無効です");
-                    return;
             }
 
-            // 新しいタブで検索結果を表示
-            window.open(url, "_blank");
+            // 検索結果を1つずつ表示
+            results.forEach((result, index) => {
+                const card = document.createElement('div');
+                card.classList.add('result-card');
+                card.innerHTML = `
+                    <div class="result-title">${result.title}</div>
+                    <div class="result-description">${result.description}</div>
+                `;
+                resultContainer.appendChild(card);
+            });
         }
     </script>
 </body>
